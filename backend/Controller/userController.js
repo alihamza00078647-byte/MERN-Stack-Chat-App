@@ -1,6 +1,8 @@
+const { cloudinary } = require('../Lib/cloudinary');
 const { generateToken } = require('../Lib/utils');
 const user = require('../Model/userModel');
 const bcrypt = require('bcryptjs');
+
 
 
 
@@ -57,9 +59,41 @@ const Login = async () => {
 
 
 // Whether the user is authicated or not?
+const checkAuth = (req, res) => {
+
+    try {
+        res.json({success: true, User: req.User});
+    } catch (error) {
+        res.json({success: false, message: error.message});
+    }
+}
+
+
+
+// Controller to update user profile
+const updateProfile = async (req, res) => {
+    try {
+        const {profilePic, bio, fullName} = req.body;
+        const userId = req.user._id;
+        let updatedUser;
+
+        if (!profilePic) {
+            updatedUser = await user.findByIdAndUpdate(userId, {bio, fullName}, {new: true});
+
+        } else {
+            const upload = await cloudinary.uploader.upload(profilePic);
+            updatedUser = await user.findByIdAndUpdate(userId, {profilePic: upload.secure_url, bio, fullName}, {new: true});
+        } 
+
+        res.json({success:true, User: updatedUser});
+
+    } catch (error) {
+        res.json({success: false, message: error.message})
+    }
+}
 
 
 
 module.exports = {
-    signup, Login
+    signup, Login, checkAuth, updateProfile
 }
