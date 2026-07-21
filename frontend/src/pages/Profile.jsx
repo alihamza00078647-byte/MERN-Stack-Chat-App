@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 function Profile() {
-
-  const {userAuth, updateProfile} = useContext(AuthContext);
+  const { userAuth, updateProfile } = useContext(AuthContext);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const navigate = useNavigate();
@@ -15,8 +14,8 @@ function Profile() {
   const onChangeHandler = async (event) => {
     event.preventDefault();
     if (!selectedImage) {
-      await updateProfile({fullName: name, bio});
-      navigate('/');
+      await updateProfile({ fullName: name, bio });
+      navigate("/");
       return;
     }
 
@@ -24,16 +23,19 @@ function Profile() {
     reader.readAsDataURL(selectedImage);
     reader.onload = async () => {
       const base64Image = reader.result;
-      await updateProfile({profilePic: base64Image, fullName: name, bio});
-      navigate('/')
-    }
-  }
+      await updateProfile({ profilePic: base64Image, fullName: name, bio });
+      navigate("/");
+    };
+  };
 
   return (
     <div className="min-h-screen bg-cover bg-no-repeat flex items-center justify-center">
       {/* ---------- Left Side ----------*/}
       <div className="w-5/6 max-w-2xl backdrop-blur-2xl text-gray-300 border border-gray-600 flex items-center justify-between max-sm:flex-col-reverse rounded-lg">
-        <form onSubmit={onChangeHandler} className="flex flex-col gap-2 p-10 flex-1">
+        <form
+          onSubmit={onChangeHandler}
+          className="flex flex-col gap-2 p-10 flex-1"
+        >
           <h3 className="text-lg">Profile Details</h3>
 
           <label
@@ -84,7 +86,11 @@ function Profile() {
           </button>
         </form>
         {/* ---------- Right Side ----------*/}
-        <img src={assets.logo_icon} alt="logo" className='max-w-44 aspect-square rounded-full mx-10 max-sm:mt-10' />
+        <img
+          src={userAuth?.profilePic || assets.logo_icon}
+          alt="logo"
+          className='max-w-44 aspect-square rounded-full mx-10 max-sm:mt-10'
+        />
       </div>
     </div>
   );

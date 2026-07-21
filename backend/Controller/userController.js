@@ -74,7 +74,9 @@ const checkAuth = (req, res) => {
 const updateProfile = async (req, res) => {
     try {
         const {profilePic, bio, fullName} = req.body;
-        const userId = req.user._id;
+        
+        const userId = req.User._id;
+        // console.log(profilePic, bio, fullName);
         let updatedUser;
 
         if (!profilePic) {
@@ -82,12 +84,13 @@ const updateProfile = async (req, res) => {
 
         } else {
             const upload = await cloudinary.uploader.upload(profilePic);
-            updatedUser = await user.findByIdAndUpdate(userId, {profilePic: upload.secure_url, bio, fullName}, {new: true});
+            updatedUser = await user.findByIdAndUpdate(userId, {profilePic: upload.secure_url, bio, fullName}, {new: true}).select("-password");
         } 
 
         res.json({success:true, User: updatedUser});
 
     } catch (error) {
+        console.log(error)
         res.json({success: false, message: error.message})
     }
 }
