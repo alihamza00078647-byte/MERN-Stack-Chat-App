@@ -5,7 +5,7 @@ const user = require('../Model/userModel');
 
 // External
 const { cloudinary } = require('../Lib/cloudinary');
-const { userSocketMap } = require('../Lib/socket');
+const { userSocketMap, getReceiverSocketId, getIO } = require('../Lib/socket');
 
 
 
@@ -95,8 +95,11 @@ const sendMessage = async (req, res) => {
 
 
         // Emit the New Message to receiver Socket
-        const receiverSocketId = userSocketMap[receiverId];
-        
+       const receiverSocketId = getReceiverSocketId(receiverId);
+        if (receiverSocketId) {
+            getIO().to(receiverSocketId).emit('newMessage', newMessage);
+        }
+
 
         res.json({success: true, newMessage})
 
@@ -110,5 +113,5 @@ const sendMessage = async (req, res) => {
 
 
 module.exports = {
-    getUserforSidebar, markMessagesAsSeen, getMessages
+    getUserforSidebar, markMessagesAsSeen, getMessages, sendMessage
 }
