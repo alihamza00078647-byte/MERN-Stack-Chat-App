@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs');
 
 
 // Sign up Controller for New User
-const signup = async () => {
+const signup = async (req, res) => {
     const {fullName, email, password, bio} = req.body;
 
     try {
@@ -36,7 +36,7 @@ const signup = async () => {
 }
 
 
-const Login = async () => {
+const Login = async (req, res) => {
     try {
 
         const {email, password} = req.body;
@@ -48,7 +48,7 @@ const Login = async () => {
             res.json({success: false, message: "Credentials Errors"});
         }
 
-        const token = generateToken();
+        const token = generateToken(userData._id);
 
         res.json({success:true, userData, token, message: "Login Successfully"});
         
