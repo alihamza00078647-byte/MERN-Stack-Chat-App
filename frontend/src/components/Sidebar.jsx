@@ -17,10 +17,15 @@ function Sidebar() {
   } = useContext(ChatContext);
   const [input, setInput] = useState(false);
 
-  const filterUsers = input ? users.filter((user) => user.fullName.toLowerCase().includes(input.toLowerCase())) : users;
+  const filterUsers = input
+    ? users.filter((user) =>
+        user.fullName.toLowerCase().includes(input.toLowerCase()),
+      )
+    : users;
 
   useEffect(() => {
     getUsers();
+    console.log(onlineUsers)
   }, [onlineUsers]);
 
   return (
@@ -75,7 +80,7 @@ function Sidebar() {
           >
             <img
               src={user?.profilePic || assets.avatar_icon}
-              alt=""
+              alt="profilePic"
               className="w-[35px] rounded-full aspect-[1/1]"
             />
             <div className="flex flex-col leading-5">

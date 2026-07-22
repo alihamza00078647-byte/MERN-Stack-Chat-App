@@ -15,14 +15,13 @@ const getUserforSidebar = async (req, res) => {
         const userId = req.User._id;
         
         const filteredUser = await user.find({_id: {$ne: userId}}).select('-password');
-        console.log(filteredUser);
-
-
+        
+        
         // Count No of unseen msg
         const unseenMessages = {};
         const promise = filteredUser.map(async (user) => {
             const messages = await message.find({senderId: user._id, receiverId: userId, seen: false});
-
+            
             if (messages.length > 0) {
                 unseenMessages[user._id] = messages.length;
             }

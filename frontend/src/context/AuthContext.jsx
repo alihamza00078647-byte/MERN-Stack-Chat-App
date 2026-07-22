@@ -123,8 +123,10 @@ export const AuthProvider = ({children}) => {
         onlineUser,
         socket,
         Login,
+        token,
         Logout,
-        updateProfile
+        updateProfile,
+        backendURL
     }
 
 
