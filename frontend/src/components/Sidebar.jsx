@@ -1,11 +1,27 @@
 import { useNavigate } from "react-router-dom";
-import assets, { userDummyData } from "../assets/assets";
-import { useContext } from "react";
+import assets from "../assets/assets";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { ChatContext } from "../context/ChatContext";
 
-function Sidebar({ selectedUser, setSelectedUser }) {
+function Sidebar() {
   const navigate = useNavigate();
-  const { Logout } = useContext(AuthContext);
+  const { Logout, onlineUsers } = useContext(AuthContext);
+  const {
+    getUsers,
+    users,
+    selectedUser,
+    setSelectedUser,
+    unseenMessages,
+    setUnseenMessages,
+  } = useContext(ChatContext);
+  const [input, setInput] = useState(false);
+
+  const filterUsers = input ? users.filter((user) => user.fullName.toLowerCase().includes(input.toLowerCase())) : users;
+
+  useEffect(() => {
+    getUsers();
+  }, [onlineUsers]);
 
   return (
     <div
@@ -29,7 +45,9 @@ function Sidebar({ selectedUser, setSelectedUser }) {
                 Edit Profile
               </p>
               <hr className="my-2 border-t bg-gray-500" />
-              <p onClick={()=> Logout()} className="cursor-pointer text-sm">Logout</p>
+              <p onClick={() => Logout()} className="cursor-pointer text-sm">
+                Logout
+              </p>
             </div>
           </div>
         </div>
@@ -37,6 +55,8 @@ function Sidebar({ selectedUser, setSelectedUser }) {
         <div className="bg-[#282124] flex items-center gap-2 py-3 px-4 mt-5 rounded-full">
           <img src={assets.search_icon} alt="search" className="w-3" />
           <input
+            onChange={(e) => setInput(e.target.value)}
+            // value={input}
             type="text"
             placeholder="Search User..."
             className="bg-transparent border-none outline-none text-xs text-white placeholder-[#c8c8c8] flex-1"
@@ -45,7 +65,7 @@ function Sidebar({ selectedUser, setSelectedUser }) {
       </div>
 
       <div className="flex flex-col">
-        {userDummyData.map((user, index) => (
+        {filterUsers.map((user, index) => (
           <div
             key={index}
             onClick={() => {
@@ -60,15 +80,15 @@ function Sidebar({ selectedUser, setSelectedUser }) {
             />
             <div className="flex flex-col leading-5">
               <p className="">{user.fullName}</p>
-              {index < 3 ? (
+              {onlineUsers.includes(user._id) ? (
                 <span className="text-green-600 text-xs">Online</span>
               ) : (
                 <span className="text-neutral-400 text-xs">Offline</span>
               )}
             </div>
-            {index > 2 && (
+            {unseenMessages[user._id] > 0 && (
               <p className="absolute top-4 right-4 text-xs h-5 w-5 flex justify-center items-center rounded-full bg-violet-500/50">
-                {index}
+                {unseenMessages[user._id]}
               </p>
             )}
           </div>

@@ -6,7 +6,6 @@ const bcrypt = require('bcryptjs');
 
 
 
-
 // Sign up Controller for New User
 const signup = async (req, res) => {
     const {fullName, email, password, bio} = req.body;
@@ -41,12 +40,14 @@ const Login = async (req, res) => {
 
         const {email, password} = req.body;
         const userData = await user.findOne({email});
-
+        
         const isMatch = await bcrypt.compare(password, userData.password);
-
+        
+        // console.log(userData, isMatch);
         if (!isMatch) {
             res.json({success: false, message: "Credentials Errors"});
         }
+
 
         const token = generateToken(userData._id);
 

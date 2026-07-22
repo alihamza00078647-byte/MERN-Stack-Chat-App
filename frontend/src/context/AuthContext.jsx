@@ -20,8 +20,8 @@ export const AuthProvider = ({children}) => {
     const [socket, setSocket] = useState(null);
 
     
-    // check if user data is authenticated or if so, set user data and connect socket
-
+    
+    // check if user data is authenticated or if so, set user data and connect socket.
     const checkAuth = async () => {
 
         try {
@@ -39,9 +39,9 @@ export const AuthProvider = ({children}) => {
     const Login = async (state, credentials) => {
         try {
             
-            //console.log(credentials)
+            console.log(credentials)
             const {data} = await axios.post(`${backendURL}/api/auth/${state}`, credentials);
-            // console.log(data);
+            console.log(data);
             if (data.success) {
                 setUserAuth(data.userData);
                 connectSocket(data.userData);
@@ -75,7 +75,7 @@ export const AuthProvider = ({children}) => {
             
             // console.log(body)
             const {data} = await axios.put(`${backendURL}/api/auth/update-profile`, body);
-            console.log(data)
+            // console.log(data);
             if (data.success){
                 setUserAuth(data.User);
                 toast.success("Profile update Successfully");
@@ -92,7 +92,7 @@ export const AuthProvider = ({children}) => {
     // Connect socket function to handle sockets connections and user updates
     const connectSocket = (userData) => {
         if (!userData || socket?.connected) {
-            return 
+            return;
         }
         const newSocket = io(backendURL, {
             query: {
