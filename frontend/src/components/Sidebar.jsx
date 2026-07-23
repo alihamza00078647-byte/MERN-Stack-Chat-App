@@ -6,7 +6,7 @@ import { ChatContext } from "../context/ChatContext";
 
 function Sidebar() {
   const navigate = useNavigate();
-  const { Logout, onlineUsers } = useContext(AuthContext);
+  const { Logout, onlineUsers = [] } = useContext(AuthContext);
   const {
     getUsers,
     users,
@@ -25,7 +25,6 @@ function Sidebar() {
 
   useEffect(() => {
     getUsers();
-    console.log(onlineUsers)
   }, [onlineUsers]);
 
   return (
@@ -85,7 +84,7 @@ function Sidebar() {
             />
             <div className="flex flex-col leading-5">
               <p className="">{user.fullName}</p>
-              {onlineUsers.includes(user._id) ? (
+              {onlineUsers?.includes(user._id) ? (
                 <span className="text-green-600 text-xs">Online</span>
               ) : (
                 <span className="text-neutral-400 text-xs">Offline</span>
